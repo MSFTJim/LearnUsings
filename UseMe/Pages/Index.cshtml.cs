@@ -8,9 +8,15 @@ public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
 
+
+    UnicodeEncoding uni2Encoding = new UnicodeEncoding();
+    byte[]? thirdString;
+
     public IndexModel(ILogger<IndexModel> logger)
     {
         _logger = logger;
+        thirdString = uni2Encoding.GetBytes(
+            "Class level byte array.");
     }
 
     string manyLines = @"This is line one
@@ -31,6 +37,9 @@ public class IndexModel : PageModel
         byte[] secondString = uniEncoding.GetBytes(
             Path.GetInvalidPathChars());
 
+        int byteCount = thirdString.Count();
+        
+
         using (var reader = new StringReader(manyLines))
         {
             string? item;
@@ -46,7 +55,7 @@ public class IndexModel : PageModel
         int count = 0;
 
 
-        using (MemoryStream memStream = new MemoryStream(firstString))
+        using (MemoryStream memStream = new MemoryStream(thirdString))
         {
             // Write the stream properties to the console.
             Console.WriteLine(
@@ -58,7 +67,7 @@ public class IndexModel : PageModel
 
             ValidateMe();
 
-            MemoryStream memStream2 = new MemoryStream(firstString);
+            MemoryStream memStream2 = new MemoryStream(thirdString);
 
             Console.WriteLine(
                "Capacity = {0}, Length = {1}, Position = {2}\n",
@@ -72,9 +81,9 @@ public class IndexModel : PageModel
 
     bool ValidateMe()
     {
-          UnicodeEncoding uni2Encoding = new UnicodeEncoding();
-          byte[] thirdString = uni2Encoding.GetBytes(
-            "Welcome to the Machine");
+        //   UnicodeEncoding uni2Encoding = new UnicodeEncoding();
+        //   byte[] thirdString = uni2Encoding.GetBytes(
+        //     "Welcome to the Machine");
 
         MemoryStream ms = new MemoryStream(thirdString);
         using (var reader = new BinaryReader(ms))
