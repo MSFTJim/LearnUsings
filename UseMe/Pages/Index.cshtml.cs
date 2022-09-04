@@ -10,7 +10,7 @@ public class IndexModel : PageModel
 
 
     UnicodeEncoding uni2Encoding = new UnicodeEncoding();
-    byte[]? thirdString;
+    byte[] thirdString;
 
     public IndexModel(ILogger<IndexModel> logger)
     {
@@ -29,26 +29,25 @@ public class IndexModel : PageModel
     {
    
 
-        UnicodeEncoding uniEncoding = new UnicodeEncoding();
+       // UnicodeEncoding uniEncoding = new UnicodeEncoding();
 
         // Create the data to write to the stream.
-        byte[] firstString = uniEncoding.GetBytes(
+        byte[] firstString = uni2Encoding.GetBytes(
             "Invalid file path characters are: ");
-        byte[] secondString = uniEncoding.GetBytes(
+        byte[] secondString = uni2Encoding.GetBytes(
             Path.GetInvalidPathChars());
 
-        int byteCount = thirdString.Count();
-        
+        // int byteCount = thirdString.Count();        
 
-        using (var reader = new StringReader(manyLines))
-        {
-            string? item;
-            do
-            {
-                item = reader.ReadLine();
-                Console.WriteLine(item);
-            } while (item != null);
-        }
+        // using (var reader = new StringReader(manyLines))
+        // {
+        //     string? item;
+        //     do
+        //     {
+        //         item = reader.ReadLine();
+        //         Console.WriteLine(item);
+        //     } while (item != null);
+        // }
 
         // reader is in scope here, but has been disposed
 
@@ -67,13 +66,19 @@ public class IndexModel : PageModel
 
             ValidateMe();
 
-            MemoryStream memStream2 = new MemoryStream(thirdString);
+            MemoryStream memStream2 = new MemoryStream();
+
+            memStream.CopyTo(memStream2);
+
+            ValidateMe2(memStream2);
+
+            ValidateMe3(memStream);
 
             Console.WriteLine(
                "Capacity = {0}, Length = {1}, Position = {2}\n",
-               memStream2.Capacity.ToString(),
-               memStream2.Length.ToString(),
-               memStream2.Position.ToString());
+               memStream.Capacity.ToString(),
+               memStream.Length.ToString(),
+               memStream.Position.ToString());
         }
 
         count++;
@@ -81,22 +86,34 @@ public class IndexModel : PageModel
 
     bool ValidateMe()
     {
-        //   UnicodeEncoding uni2Encoding = new UnicodeEncoding();
-        //   byte[] thirdString = uni2Encoding.GetBytes(
-        //     "Welcome to the Machine");
-
         MemoryStream ms = new MemoryStream(thirdString);
         using (var reader = new BinaryReader(ms))
         {
             var headerBytes = reader.ReadBytes(5);
-        }
-
-        //  using (var reader = new StringReader(manyLines))
-        //  {
-        //      var headerBytes = reader.ReadLine();
-
-        //  }
-
+        }        
         return true;
-    }
+    }  // end validate
+    
+    bool ValidateMe2(MemoryStream ms)
+    {
+        // MemoryStream ms = new MemoryStream(thirdString);
+        using (var reader = new BinaryReader(ms))
+        {
+            var headerBytes = reader.ReadBytes(5);
+        }        
+        return true;
+    }  // end validate
+
+    bool ValidateMe3(MemoryStream ms)
+    {
+        MemoryStream ms3 = new MemoryStream();
+
+        ms.CopyTo(ms3);
+
+        using (var reader = new BinaryReader(ms3))
+        {
+            var headerBytes = reader.ReadBytes(5);
+        }        
+        return true;
+    }  // end validate
 }
