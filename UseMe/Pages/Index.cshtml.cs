@@ -108,6 +108,7 @@ public class IndexModel : PageModel
     {
         MemoryStream ms3 = new MemoryStream();
 
+        ms.Position = 0;
         ms.CopyTo(ms3);
 
         using (var reader = new BinaryReader(ms3))
